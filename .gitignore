@@ -1,0 +1,18 @@
+/builddir
+/build
+/target
+/dist
+/lib
+# *scripts
+# *.infra
+*Cargo.lock
+*.log*
+# *.exe*
+.cache
+.output
+.env
+.DS_Store
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+# *.vscode
