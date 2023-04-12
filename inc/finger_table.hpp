@@ -8,8 +8,8 @@
 #define M_PI (3.14)
 #endif // M_PI
 
-#define MAXIMUM_COLUMNS (8)
-#define MAXIMUM_ROWS (8)
+#define MAXIMUM_COLUMNS (10)
+#define MAXIMUM_ROWS (10)
 
 class StartingNode
 {

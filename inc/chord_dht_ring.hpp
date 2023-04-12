@@ -3,7 +3,7 @@
 
 #include "C:/raylib/raylib/src/raylib.h"
 
-#define MINIMUM_SEGMENTED_NODES (8)
+#define MINIMUM_SEGMENTED_NODES (10)
 
 class ChordNode
 {
