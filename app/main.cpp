@@ -2,7 +2,7 @@
 #define RAYGUI_IMPLEMENTATION
 #include "../lib/raygui/src/raygui.h"
 #endif // RAYGUI_IMPLEMENTATION
-#include "../inc/finger_table.hpp"
+#include "../inc/strstream_cfg_io.hpp"
 #include "../inc/arbitrary_node_network.hpp"
 #include "../inc/chord_dht_ring.hpp"
 
