@@ -18,7 +18,7 @@ void rfile(std::istream &is)
   if (!is)
     exit(1);
 
-  std::istringstream iss(parsed);
+  std::istringstream stream(parsed);
 }
 
 void sentry_survey_span()

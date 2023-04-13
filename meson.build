@@ -1,4 +1,4 @@
-project('source_boilerplate', 'cpp')
+project('progessive_p2p', 'cpp')
 
-executable('source_boilerplate', 'app/main.cpp',
+executable('progressive_p2p', 'src/main.cpp',
     win_subsystem: 'windows')

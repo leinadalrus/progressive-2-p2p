@@ -6,7 +6,6 @@
 class ArbitraryNodeNetwork
 {
   FingerTable finger_table;
-  ;
 
 public:
   void join(int node)
