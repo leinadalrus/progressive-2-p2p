@@ -1,7 +1,8 @@
-#ifndef RAYGUI_IMPLEMENTATION
-#define RAYGUI_IMPLEMENTATION
-#include "../lib/raygui/src/raygui.h"
-#endif // RAYGUI_IMPLEMENTATION
+#include "C:/raylib/raylib/src/raylib.h"
+// #ifndef RAYGUI_IMPLEMENTATION
+// #define RAYGUI_IMPLEMENTATION
+// #include "../lib/raygui/src/raygui.h"
+// #endif // RAYGUI_IMPLEMENTATION
 #include "../inc/arbitrary_node_network.hpp"
 #include "../inc/chord_dht_ring.hpp"
 
@@ -92,10 +93,6 @@ int main(int argc, char *argv[])
     arbitrary_node_network.stabilize();
     arbitrary_node_network.notify(starting_angle);
     arbitrary_node_network.fix_fingers();
-
-    starting_angle = GuiSliderBar((Rectangle){600, 40, 120, 20}, "Starting Angle", NULL, starting_angle, 0, 720);
-    segmented_nodes = (int)GuiSliderBar((Rectangle){600, 240, 120, 20}, "Segmented Nodes", NULL, (float)segmented_nodes, 0, 100);
-    minimum_segmented_nodes = (int)ceilf((ending_angle - starting_angle) / 15);
 
     EndDrawing();
   }
