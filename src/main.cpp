@@ -1,4 +1,11 @@
+#ifdef _WIN32
 #include "C:/raylib/raylib/src/raylib.h"
+#endif
+#ifdef linux
+#include "raylib.h"
+// #else
+#include "/usr/local/lib/raylib/include/raylib.h"
+#endif
 // #ifndef RAYGUI_IMPLEMENTATION
 // #define RAYGUI_IMPLEMENTATION
 // #include "../lib/raygui/src/raygui.h"
