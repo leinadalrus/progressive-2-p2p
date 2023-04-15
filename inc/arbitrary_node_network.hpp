@@ -2,6 +2,7 @@
 #define ARBITRARY_NODE_NETWORK_HPP
 
 #include "finger_table.hpp"
+#include "modulus_nth.hpp"
 
 class ArbitraryNodeNetwork
 {
@@ -59,6 +60,8 @@ public:
 
   void fix_fingers()
   {
+    int i = nth_callback();
+    int predecessor = this->finger_table.find_successor(this->finger_table.node(i));
   }
 };
 

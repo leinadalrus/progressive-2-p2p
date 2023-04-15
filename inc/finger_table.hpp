@@ -14,25 +14,25 @@
 class StartingNode
 {
 public:
-  int nodes[8];
+  int nodes[MAXIMUM_COLUMNS];
 };
 
 class IntervalMatrix
 {
 public:
-  int key_values[8][8];
+  int key_values[2][MAXIMUM_COLUMNS];
 };
 
 class Successor
 {
 public:
-  int successors[8];
+  int successors[MAXIMUM_COLUMNS];
 };
 
 class Key
 {
 public:
-  int keys[8];
+  int keys[MAXIMUM_COLUMNS];
 };
 
 class FingerTable

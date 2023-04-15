@@ -12,6 +12,7 @@
 // #endif // RAYGUI_IMPLEMENTATION
 #include "../inc/arbitrary_node_network.hpp"
 #include "../inc/chord_dht_ring.hpp"
+#include "../inc/n_nodes_e.hpp"
 
 int FingerTable::node(int starting_node)
 {
@@ -81,6 +82,7 @@ int main(int argc, char *argv[])
   float ending_angle = 360.0f;
 
   finger.node((float)starting_angle);
+  is_modus_nth(finger.node((int)Nodes::One));
   int segmented_nodes = finger.find_predecessor(finger.find_successor(starting_angle));
   int minimum_segmented_nodes = 8;
 
