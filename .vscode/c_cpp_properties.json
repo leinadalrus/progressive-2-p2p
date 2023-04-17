@@ -12,7 +12,7 @@
                 "UNICODE",
                 "_UNICODE"
             ],
-            "compilerPath": "C:/raylib/mingw/bin/gcc.exe",
+            "compilerPath": "C:\\raylib\\w64devkit\\bin\\g++.exe",
             "windowsSdkVersion": "10.0.19041.0",
             "cStandard": "c99",
             "cppStandard": "c++14",
