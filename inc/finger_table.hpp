@@ -5,9 +5,6 @@
 #include <cmath>
 
 #define _USE_MATH_DEFINES
-#ifdef M_PI
-#define M_PI (3.14)
-#endif // M_PI
 
 #define MAXIMUM_COLUMNS (10)
 #define MAXIMUM_ROWS (10)

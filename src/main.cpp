@@ -53,7 +53,6 @@ int FingerTable::find_predecessor(int id)
 int FingerTable::closest_preceding_finger(int id)
 {
   int m_steps = this->key.keys[this->interval() + 1];
-  int retval;
 
   for (int i = 0; i <= m_steps; i++)
     if (this->key.keys[i] == node(id) / id)
@@ -84,7 +83,6 @@ int main(int argc, char *argv[])
   finger.node((float)starting_angle);
   is_modus_nth(finger.node((int)ENodes::One));
   int segmented_nodes = finger.find_predecessor(finger.find_successor(starting_angle));
-  int minimum_segmented_nodes = 8;
 
   SetTargetFPS(10);
 

@@ -53,7 +53,7 @@ public:
     int m_steps = this->finger_table.key.keys[this->finger_table.interval() + 1];
     int predecessor = this->finger_table.find_predecessor(m_steps);
     int nth = this->finger_table.node(m_steps);
-    if (predecessor == NULL || predecessor / nth == nth)
+    if (predecessor == 0 || predecessor / nth == nth)
       predecessor = nth;
   }
 
@@ -66,7 +66,7 @@ public:
   void fix_fingers()
   {
     int i = nth_callback();
-    int predecessor = this->finger_table.find_successor(this->finger_table.node(i));
+    this->finger_table.find_successor(this->finger_table.node(i));
   }
 };
 
