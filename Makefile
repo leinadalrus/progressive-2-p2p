@@ -33,6 +33,9 @@ $(build_dir)/%.cpp.o: %.cpp
 
 -include $(proj_deps)
 
+unknown_windows_gnu_x86_64:
+	g++ src/main.cpp -o main -O1 -Wall -std=c++14 -Wno-missing-braces -L /c/raylib/raylib/ -lraylib -lopengl32 -lgdi32 -lwinmm
+
 windows_msvc_x86_64:
 	copy lib/raygui/src/raygui.h lib/raygui/src/raygui.c
 	gcc -o lib/raygui/src/raygui.dll lib/raygui/src/raygui.c -shared -DRAYGUI_IMPLEMENTATION -DBUILD_LIBTYPE_SHARED -static-libgcc -lopengl32 -lgdi32 -lwinmm -Wl,--out-implib,lib/raygui/src/librayguidll.a
