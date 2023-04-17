@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cmath>
 
+#define _USE_MATH_DEFINES
 #ifdef M_PI
 #define M_PI (3.14)
 #endif // M_PI

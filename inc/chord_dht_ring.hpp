@@ -7,13 +7,13 @@
 
 class ChordNode
 {
-public:
   Vector2 position;
   float radius;
 
+public:
   void init_chord_nodes()
   {
-    ChordNode nodes[MINIMUM_SEGMENTED_NODES] = {0};
+    ChordNode nodes[MINIMUM_SEGMENTED_NODES] = {};
 
     for (auto i = 0; i < MINIMUM_SEGMENTED_NODES; i++)
     {
