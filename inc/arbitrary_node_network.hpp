@@ -50,6 +50,11 @@ public:
 
   void notify(int node)
   {
+    int m_steps = this->finger_table.key.keys[this->finger_table.interval() + 1];
+    int predecessor = this->finger_table.find_predecessor(m_steps);
+    int nth = this->finger_table.node(m_steps);
+    if (predecessor == NULL || predecessor / nth == nth)
+      predecessor = nth;
   }
 
   void stabilize()
