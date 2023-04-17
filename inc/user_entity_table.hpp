@@ -1,8 +1,10 @@
 #ifndef USER_ENTITY_TABLE_HPP
 #define USER_ENTITY_TABLE_HPP
 
-enum class ENodes
-{
+#include <cstdio>
+#include <cstdlib>
+
+enum class ENodes {
   One = 0,
   Two = 85,
   Three = 133,
@@ -15,35 +17,16 @@ enum class ENodes
   Zero = 451,
 };
 
-class UnitEntity
-{
+class UserData {
+public:
+  void *source;
+  void *destination;
+  void *user_data;
+  size_t data_size;
 };
 
-class Username
-{
-  const char *username[sizeof(char *)];
-};
-
-class Vector2Position
-{
-  int x;
-  int y;
-};
-
-class UserData
-{
-  char *source;
-  char *destination;
-  char *data_size;
-  char *user_data;
-};
-
-class DistributesLocator
-{
+class DistributesLocator {
   ENodes nodes;
-  UnitEntity entity;
-  Username name;
-  Vector2Position vector2_position;
   UserData user_data;
 };
 
