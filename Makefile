@@ -33,7 +33,7 @@ $(build_dir)/%.cpp.o: %.cpp
 
 -include $(proj_deps)
 
-unknown_windows_gnu_x86_64:
+unknown_unix_gnu_x86_64:
 	g++ src/main.cpp -o main -O1 -Wall -std=c++14 -Wno-missing-braces -L /c/raylib/raylib/ -lraylib -lopengl32 -lgdi32 -lwinmm
 
 windows_msvc_x86_64:
