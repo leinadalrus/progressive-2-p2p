@@ -24,9 +24,9 @@
 .PHONY: all clean
 
 # Define required raylib variables
-PROJECT_NAME       ?= game
-RAYLIB_VERSION     ?= 4.2.0
-RAYLIB_PATH        ?= ..\..
+PROJECT_NAME       ?= app
+RAYLIB_VERSION     ?= 4.5.0
+RAYLIB_PATH        ?= C:/raylib/raylib
 
 # Define compiler path on Windows
 COMPILER_PATH      ?= C:/raylib/w64devkit/bin
@@ -112,7 +112,7 @@ endif
 # This is not currently used by src/Makefile. Not sure of its origin or usage. Refer to wiki.
 # TODO: update install: target in src/Makefile for RPI, consider relation to LINUX.
 ifeq ($(PLATFORM),PLATFORM_RPI)
-    RAYLIB_PATH       ?= /home/pi/raylib
+    RAYLIB_PATH       ?= C:/raylib/raylib
 endif
 
 ifeq ($(PLATFORM),PLATFORM_WEB)
@@ -193,7 +193,7 @@ endif
 #  -std=gnu99           defines C language mode (GNU C from 1999 revision)
 #  -Wno-missing-braces  ignore invalid warning (GCC bug 53119)
 #  -D_DEFAULT_SOURCE    use with -std=c99 on Linux and PLATFORM_WEB, required for timespec
-CFLAGS += -Wall -std=c99 -D_DEFAULT_SOURCE -Wno-missing-braces
+CFLAGS += -Wall -std=c++14 -D_DEFAULT_SOURCE -Wno-missing-braces
 
 ifeq ($(BUILD_MODE),DEBUG)
     CFLAGS += -g -O0
@@ -352,9 +352,9 @@ SRC_DIR = src
 OBJ_DIR = obj
 
 # Define all object files from source files
-SRC = $(call rwildcard, *.c, *.h)
-#OBJS = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-OBJS ?= main.c
+SRC = $(call rwildcard, *.c, *.cpp, .h, *.hpp)
+OBJS = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+OBJS ?= $(SRC_DIR)/main.cpp
 
 # For Android platform we call a custom Makefile.Android
 ifeq ($(PLATFORM),PLATFORM_ANDROID)
