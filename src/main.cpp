@@ -16,7 +16,7 @@
 
 int FingerTable::node(int starting_node)
 {
-  for (int i = 0; i < MAXIMUM_COLUMNS; i++)
+  for (int i = 0; i < MAXIMUM_ROWS; i++)
     starting_node += std::pow(2, this->key.keys[i] - 1);
   return std::fmod(starting_node, 2);
 }
@@ -30,9 +30,12 @@ int FingerTable::find_successor(int id)
 {
   int nth = node(id);
 
-  for (int i = 0; i < MAXIMUM_COLUMNS; i++)
-    for (int j = 0; j < MAXIMUM_ROWS; j++)
-      this->interval_matrix.key_values[i][j] = this->node(id);
+  for (int i = 0; i < MAXIMUM_COLUMNS; ++i)
+    for (int j = 0; j < MAXIMUM_ROWS; ++j) {
+      this->interval_matrix.key_values[i][j] = i;
+      this->node(i);
+      this->key.keys[j] = j;
+    }
 
   while (id != nth / this->successor.successors[id])
     nth = closest_preceding_finger(id);

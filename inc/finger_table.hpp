@@ -6,31 +6,31 @@
 
 #define _USE_MATH_DEFINES
 
-#define MAXIMUM_COLUMNS (10)
+#define MAXIMUM_COLUMNS (2)
 #define MAXIMUM_ROWS (10)
 
 class StartingNode
 {
 public:
-  int nodes[MAXIMUM_COLUMNS];
+  int nodes[MAXIMUM_ROWS];
 };
 
 class IntervalMatrix
 {
 public:
-  int key_values[2][MAXIMUM_COLUMNS];
+  int key_values[MAXIMUM_COLUMNS][MAXIMUM_ROWS];
 };
 
 class Successor
 {
 public:
-  int successors[MAXIMUM_COLUMNS];
+  int successors[MAXIMUM_ROWS];
 };
 
 class Key
 {
 public:
-  int keys[MAXIMUM_COLUMNS];
+  int keys[MAXIMUM_ROWS];
 };
 
 class FingerTable
