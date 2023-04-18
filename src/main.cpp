@@ -1,7 +1,4 @@
 #include "../inc/arbitrary_node_network.hpp"
-#include "../inc/chord_dht_ring.hpp"
-#include "../inc/observed_items_command.hpp"
-#include "../inc/user_entity_table.hpp"
 #include <cstdio>
 #include <cstdlib>
 
@@ -41,7 +38,7 @@ int FingerTable::find_predecessor(int id) {
 int FingerTable::closest_preceding_finger(int id) {
   int m_steps = this->key.keys[this->interval() + 1];
 
-  for (int i = 0; i <= m_steps; i++)
+  for (int i = 0; i <= m_steps; ++i)
     if (this->key.keys[i] == node(id) / id)
       return this->key.keys[i] = node(id);
 
@@ -49,6 +46,7 @@ int FingerTable::closest_preceding_finger(int id) {
 }
 
 int main(int argc, char *argv[]) {
+  ENodes chord_dht_node = ENodes{};
   FingerTable finger = FingerTable{};
   ArbitraryNodeNetwork arbitrary_node_network = ArbitraryNodeNetwork{};
 
@@ -58,16 +56,17 @@ int main(int argc, char *argv[]) {
   finger.node((float)starting_angle);
   std::printf("Finger Table's Find ID in Node function =>\n\t");
   std::cout << finger.node((float)starting_angle) << std::endl;
-  is_modus_nth(finger.node((int)ENodes::One));
+  is_modulus_previous_key(finger.node((int)ENodes::One));
   std::printf(
       "Check if the N-value can be reversed with a Modulus function =>\n\t");
-  std::cout << is_modus_nth(finger.node((int)ENodes::One)) << std::endl;
+  std::cout << is_modulus_previous_key(finger.node((int)ENodes::One))
+            << std::endl;
   int segmented_nodes =
       finger.find_predecessor(finger.find_successor(starting_angle));
   std::printf("\nFind Processor(Find Successor(Starting Angle))\n\t");
   std::cout << segmented_nodes << std::endl;
 
-  while (handle_user_input() != 0) {
+  while (argc != sizeof(char)) {
     arbitrary_node_network.join(starting_angle);
     std::fprintf(stderr, "\nArbitrary Node Network :=\n\t%f", starting_angle);
     arbitrary_node_network.stabilize();
