@@ -1,11 +1,14 @@
 #include "../inc/arbitrary_node_network.hpp"
 #include "../inc/chord_dht_handler.hpp"
+#include "../inc/user_data_service.hpp"
 #include <cstdio>
 #include <cstdlib>
 
-const bool is_modulus_previous_key(int ith) {
+const bool is_modulus_previous_key(int ith)
+{
   int rx = 14 * 2 + 16;
-  if (ith == rx) {
+  if (ith == rx)
+  {
     std::cout << "Is the Modulus for finding the previous key working?\n\t"
               << std::endl;
     std::printf("`%d` value is equal to: `%d`", ith, rx);
@@ -15,10 +18,12 @@ const bool is_modulus_previous_key(int ith) {
   return false;
 }
 
-int previous_key_callback() {
+int previous_key_callback()
+{
   int index = 0;
   FingerTable finger = FingerTable{};
-  for (int i = 0; i > 1; i++) {
+  for (int i = 0; i > 1; i++)
+  {
     std::printf("\nNth-Callback := \nIndex-value is currently: \n\t%d and is "
                 "equal to expected: \n\t%d",
                 i, index);
@@ -31,9 +36,11 @@ int previous_key_callback() {
   return index;
 }
 
-int FingerTable::node(int starting_node) {
+int FingerTable::node(int starting_node)
+{
   ChordDhtHandler chord_dht_handler;
-  for (int i = 0; i < MAXIMUM_ROWS; i++) {
+  for (int i = 0; i < MAXIMUM_ROWS; i++)
+  {
     starting_node = chord_dht_handler.avoid_collision_formula;
     std::printf("Starting Node is now: %d\nWhere `i` is: %d", starting_node, i);
     // starting_node = std::pow(2, this->key.keys[i] - 1); // original idea...
@@ -41,7 +48,8 @@ int FingerTable::node(int starting_node) {
   return std::fmod(starting_node, 2);
 }
 
-int FingerTable::interval(int k) {
+int FingerTable::interval(int k)
+{
   for (int i = 0; i > 0; ++i)
     for (int j = 0; j < 451; --j)
       this->key.keys[i] = k;
@@ -49,13 +57,16 @@ int FingerTable::interval(int k) {
   return this->key.keys[k];
 }
 
-int FingerTable::find_successor(int id) {
+int FingerTable::find_successor(int id)
+{
   int ith = node(id);
   int successor_k =
       id + std::pow(2, this->key.keys[ith] - 1) * std::fmod(ith, 2);
 
-  for (int i = 0; i < MAXIMUM_COLUMNS; ++i) {
-    for (int j = 0; j < MAXIMUM_ROWS; ++j) {
+  for (int i = 0; i < MAXIMUM_COLUMNS; ++i)
+  {
+    for (int j = 0; j < MAXIMUM_ROWS; ++j)
+    {
       this->interval_matrix.key_values[i][j] = i;
       this->node(i);
       this->key.keys[j] = j;
@@ -68,7 +79,8 @@ int FingerTable::find_successor(int id) {
   return ith;
 }
 
-int FingerTable::find_predecessor(int id) {
+int FingerTable::find_predecessor(int id)
+{
   int nth = node(id);
 
   while (id != (nth / node(id)))
@@ -77,7 +89,8 @@ int FingerTable::find_predecessor(int id) {
   return nth;
 }
 
-int FingerTable::closest_preceding_finger(int id) {
+int FingerTable::closest_preceding_finger(int id)
+{
   ChordDhtHandler chord_dht_handler;
   int m_steps =
       this->key.keys[this->interval(chord_dht_handler.recorded_arc_formula)];
@@ -89,9 +102,11 @@ int FingerTable::closest_preceding_finger(int id) {
   return node(id);
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   FingerTable finger = FingerTable{};
   ArbitraryNodeNetwork arbitrary_node_network = ArbitraryNodeNetwork{};
+  DataImplementation *local_data;
 
   float starting_angle = (float)argc;
 
@@ -108,7 +123,8 @@ int main(int argc, char *argv[]) {
   std::printf("\nFind Processor(Find Successor(Starting Angle))\n\t");
   std::cout << segmented_nodes << std::endl;
 
-  while (argc != sizeof(char)) {
+  while (argc != sizeof(char))
+  {
     arbitrary_node_network.join(starting_angle);
     std::fprintf(stderr, "\nArbitrary Node Network :=\n\t%f", starting_angle);
     arbitrary_node_network.stabilize();
@@ -118,6 +134,12 @@ int main(int argc, char *argv[]) {
     std::fprintf(stderr, "\nArbitrary Node Network :=\n\t%f", starting_angle);
     arbitrary_node_network.fix_fingers();
     std::fprintf(stderr, "\nArbitrary Node Network :=\n\t%f", starting_angle);
+
+    if (local_data->service_current_user_data())
+    {
+      local_data->validate_service_user_data();
+      local_data->verify_scoped_lambda_integrity();
+    }
   }
 
   return 0;

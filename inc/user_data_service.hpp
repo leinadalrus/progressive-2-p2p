@@ -27,8 +27,14 @@ public:
 
 class DataImplementation
 {
+public:
   UserData user_data;
   NullService null_service;
+
+  constexpr bool service_current_user_data()
+  {
+    this->user_data.data_size = compare_scoped_lambda_data == forward_lambda_scoped_callback;
+  }
 
   constexpr int validate_service_user_data()
   {
