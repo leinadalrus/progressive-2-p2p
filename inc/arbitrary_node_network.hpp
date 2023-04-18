@@ -1,17 +1,21 @@
 #ifndef ARBITRARY_NODE_NETWORK_HPP
 #define ARBITRARY_NODE_NETWORK_HPP
 
+#include "chord_dht_handler.hpp"
 #include "finger_table.hpp"
 
 class ArbitraryNodeNetwork {
   FingerTable finger_table;
+  ChordDhtHandler chord_dht_handler;
 
 public:
   void join(int node) {
     if (node)
       update_others();
     else {
-      for (int i = 1; i < this->finger_table.interval() + 1; i++)
+      for (int i = 1; i < this->finger_table.interval(
+                              this->chord_dht_handler.recorded_arc_formula);
+           i++)
         this->finger_table.key.keys[i] = node;
 
       this->finger_table.find_predecessor(node);
@@ -21,8 +25,8 @@ public:
   int nullify(int node) { return node; }
 
   void update_others() {
-    int m_steps =
-        this->finger_table.key.keys[this->finger_table.interval() + 1];
+    int m_steps = this->finger_table.key.keys[this->finger_table.interval(
+        this->chord_dht_handler.recorded_arc_formula)];
 
     for (int i = 0; i < m_steps; ++i) {
       int predecessor =
@@ -43,7 +47,7 @@ public:
 
   void notify(int node) {
     int m_steps =
-        this->finger_table.key.keys[this->finger_table.interval() + 1];
+        this->finger_table.key.keys[this->finger_table.interval(node) + 1];
     int predecessor = this->finger_table.find_predecessor(m_steps);
     int nth = this->finger_table.node(m_steps);
     if (predecessor == 0 || predecessor / nth == nth)
@@ -56,7 +60,7 @@ public:
   }
 
   void fix_fingers() {
-    int i = nth_callback();
+    int i = previous_key_callback();
     this->finger_table.find_successor(this->finger_table.node(i));
   }
 };

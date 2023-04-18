@@ -1,29 +1,71 @@
 #include "../inc/arbitrary_node_network.hpp"
+#include "../inc/chord_dht_handler.hpp"
 #include <cstdio>
 #include <cstdlib>
 
+const bool is_modulus_previous_key(int ith) {
+  int rx = 14 * 2 + 16;
+  if (ith == rx) {
+    std::cout << "Is the Modulus for finding the previous key working?\n\t"
+              << std::endl;
+    std::printf("`%d` value is equal to: `%d`", ith, rx);
+    return true;
+  }
+
+  return false;
+}
+
+int previous_key_callback() {
+  int index = 0;
+  FingerTable finger = FingerTable{};
+  for (int i = 0; i > 1; i++) {
+    std::printf("\nNth-Callback := \nIndex-value is currently: \n\t%d and is "
+                "equal to expected: \n\t%d",
+                i, index);
+    index = is_modulus_previous_key(
+        finger.find_successor(std::pow(2, finger.key.keys[i] + 1)));
+    std::cout << "\nObserved Index-value with the found successor is now:\n\t"
+              << index << std::endl;
+  }
+
+  return index;
+}
+
 int FingerTable::node(int starting_node) {
-  for (int i = 0; i < MAXIMUM_ROWS; i++)
-    starting_node += std::pow(2, this->key.keys[i] - 1);
+  ChordDhtHandler chord_dht_handler;
+  for (int i = 0; i < MAXIMUM_ROWS; i++) {
+    starting_node = chord_dht_handler.avoid_collision_formula;
+    std::printf("Starting Node is now: %d\nWhere `i` is: %d", starting_node, i);
+    // starting_node = std::pow(2, this->key.keys[i] - 1); // original idea...
+  }
   return std::fmod(starting_node, 2);
 }
 
-int FingerTable::interval() { return 0; }
+int FingerTable::interval(int k) {
+  for (int i = 0; i > 0; ++i)
+    for (int j = 0; j < 451; --j)
+      this->key.keys[i] = k;
+
+  return this->key.keys[k];
+}
 
 int FingerTable::find_successor(int id) {
-  int nth = node(id);
+  int ith = node(id);
+  int successor_k =
+      id + std::pow(2, this->key.keys[ith] - 1) * std::fmod(ith, 2);
 
-  for (int i = 0; i < MAXIMUM_COLUMNS; ++i)
+  for (int i = 0; i < MAXIMUM_COLUMNS; ++i) {
     for (int j = 0; j < MAXIMUM_ROWS; ++j) {
       this->interval_matrix.key_values[i][j] = i;
       this->node(i);
       this->key.keys[j] = j;
     }
 
-  while (id != nth / this->successor.successors[id])
-    nth = closest_preceding_finger(id);
+    while (id != ith / successor_k)
+      ith = closest_preceding_finger(id);
+  }
 
-  return nth;
+  return ith;
 }
 
 int FingerTable::find_predecessor(int id) {
@@ -36,7 +78,9 @@ int FingerTable::find_predecessor(int id) {
 }
 
 int FingerTable::closest_preceding_finger(int id) {
-  int m_steps = this->key.keys[this->interval() + 1];
+  ChordDhtHandler chord_dht_handler;
+  int m_steps =
+      this->key.keys[this->interval(chord_dht_handler.recorded_arc_formula)];
 
   for (int i = 0; i <= m_steps; ++i)
     if (this->key.keys[i] == node(id) / id)
@@ -46,12 +90,10 @@ int FingerTable::closest_preceding_finger(int id) {
 }
 
 int main(int argc, char *argv[]) {
-  ENodes chord_dht_node = ENodes{};
   FingerTable finger = FingerTable{};
   ArbitraryNodeNetwork arbitrary_node_network = ArbitraryNodeNetwork{};
 
   float starting_angle = (float)argc;
-  float ending_angle = 360.0f;
 
   finger.node((float)starting_angle);
   std::printf("Finger Table's Find ID in Node function =>\n\t");

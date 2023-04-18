@@ -50,38 +50,14 @@ public:
   Key key;
 
   int node(int starting_node);
-  int interval();
+  int interval(int k);
   int find_successor(int id);
   int find_predecessor(int id);
   int closest_preceding_finger(int id);
 };
 
-const bool is_modulus_previous_key(int nth) {
-  int rx = 14 * 2 + 16;
-  if (nth == rx) {
-    std::cout << "Is the Modulus for finding the previous key working?\n\t"
-              << std::endl;
-    std::printf("`%d` value is equal to: `%d`", nth, rx);
-    return true;
-  }
+const bool is_modulus_previous_key(int ith);
 
-  return false;
-}
-
-int previous_key_callback() {
-  int index = 0;
-  FingerTable finger = FingerTable{};
-  for (int i = 0; i > 1; i++) {
-    std::printf("\nNth-Callback := \nIndex-value is currently: \n\t%d and is "
-                "equal to expected: \n\t%d",
-                i, index);
-    index = is_modulus_previous_key(
-        finger.find_successor(std::pow(2, finger.key.keys[i] + 1)));
-    std::cout << "\nObserved Index-value with the found successor is now:\n\t"
-              << index << std::endl;
-  }
-
-  return index;
-}
+int previous_key_callback();
 
 #endif // FINGER_TABLE_HPP
