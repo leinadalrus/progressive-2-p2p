@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
     std::fprintf(stderr, "\nArbitrary Node Network :=\n\t%f", starting_angle);
 
     local_data->validate_service_user_data();
-    local_data->verify_scoped_lambda_integrity((int)local_data->user_data.source);
+    local_data->verify_scoped_lambda_integrity((int)local_data->user_data.predecessor);
   }
 
   return 0;
