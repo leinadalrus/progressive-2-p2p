@@ -108,35 +108,36 @@ int main(int argc, char *argv[])
   ArbitraryNodeNetwork arbitrary_node_network = ArbitraryNodeNetwork{};
   DataImplementation *local_data;
 
-  float starting_angle = (float)argc;
-
-  finger.node((float)starting_angle);
+  int predecessor = finger.node((int)local_data->user_data.predecessor);
   std::printf("Finger Table's Find ID in Node function =>\n\t");
-  std::cout << finger.node((float)starting_angle) << std::endl;
+  std::cout << finger.node(predecessor) << std::endl;
   is_modulus_previous_key(finger.node((int)ENodes::One));
   std::printf(
       "Check if the N-value can be reversed with a Modulus function =>\n\t");
   std::cout << is_modulus_previous_key(finger.node((int)ENodes::One))
             << std::endl;
   int segmented_nodes =
-      finger.find_predecessor(finger.find_successor(starting_angle));
-  std::printf("\nFind Processor(Find Successor(Starting Angle))\n\t");
+      finger.find_predecessor(finger.find_successor(predecessor));
+  std::printf("\nFind Successor in Starting Angle of: Predecessor ID\n\t");
   std::cout << segmented_nodes << std::endl;
 
-  while (argc != sizeof(char))
+  while (true)
   {
-    arbitrary_node_network.join(starting_angle);
-    std::fprintf(stderr, "\nArbitrary Node Network :=\n\t%f", starting_angle);
+    arbitrary_node_network.join(predecessor);
+    std::fprintf(stderr, "\nArbitrary Node Network :=\n\t%f", predecessor);
     arbitrary_node_network.stabilize();
     std::fprintf(stderr, "\nArbitrary Node Network.Stabilize()=>\n\t%f",
-                 starting_angle);
-    arbitrary_node_network.notify(starting_angle);
-    std::fprintf(stderr, "\nArbitrary Node Network :=\n\t%f", starting_angle);
+                 predecessor);
+    arbitrary_node_network.notify(predecessor);
+    std::fprintf(stderr, "\nArbitrary Node Network :=\n\t%f", predecessor);
     arbitrary_node_network.fix_fingers();
-    std::fprintf(stderr, "\nArbitrary Node Network :=\n\t%f", starting_angle);
+    std::fprintf(stderr, "\nArbitrary Node Network :=\n\t%f", predecessor);
 
     local_data->validate_service_user_data();
     local_data->verify_scoped_lambda_integrity((int)local_data->user_data.predecessor);
+    
+    exit(0);
+    return false;
   }
 
   return 0;
