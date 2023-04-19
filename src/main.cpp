@@ -135,11 +135,8 @@ int main(int argc, char *argv[])
     arbitrary_node_network.fix_fingers();
     std::fprintf(stderr, "\nArbitrary Node Network :=\n\t%f", starting_angle);
 
-    if (local_data->service_current_user_data())
-    {
-      local_data->validate_service_user_data();
-      local_data->verify_scoped_lambda_integrity();
-    }
+    local_data->validate_service_user_data();
+    local_data->verify_scoped_lambda_integrity((int)local_data->user_data.source);
   }
 
   return 0;

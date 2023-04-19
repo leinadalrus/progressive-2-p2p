@@ -10,8 +10,8 @@
 class UserData
 {
 public:
-  void *source;
-  void *destination;
+  void *predecessor;
+  void *successor;
   void *user_data;
   size_t data_size;
 };
@@ -19,8 +19,8 @@ public:
 class NullService
 {
 public:
-  void *source = nullptr;
-  void *destination = nullptr;
+  void *predecessor = nullptr;
+  void *successor = nullptr;
   void *user_data = nullptr;
   size_t data_size = NULL;
 };
@@ -31,38 +31,33 @@ public:
   UserData user_data;
   NullService null_service;
 
-  constexpr bool service_current_user_data()
-  {
-    this->user_data.data_size = compare_scoped_lambda_data == forward_lambda_scoped_callback;
-  }
-
-  constexpr int validate_service_user_data()
+   int validate_service_user_data()
   {
     int ret_val = 0;
 
-    if (memcmp(this->user_data.user_data, this->user_data.source, this->user_data.data_size))
+    if (memcmp(this->user_data.user_data, this->user_data.predecessor, this->user_data.data_size))
     {
-      memcpy(this->user_data.user_data, this->user_data.source, this->user_data.data_size);
-      memmove(this->user_data.user_data, this->user_data.source, this->user_data.data_size);
+      memcpy(this->user_data.user_data, this->user_data.predecessor, this->user_data.data_size);
+      memmove(this->user_data.user_data, this->user_data.predecessor, this->user_data.data_size);
       ret_val = 1;
     }
 
     return ret_val;
   }
 
-  constexpr int compare_scoped_lambda_data(int(scope_lambda_id)(int data_id))
+   int compare_scoped_lambda_data(int scope_lambda_id, int current_node)
   {
     validate_service_user_data();
-    scope_lambda_id((int)this->user_data.user_data);
+    int (scope_lambda_id)((int)this->user_data.user_data == current_node);
     return (int)scope_lambda_id;
   }
 
-  constexpr int forward_lambda_scoped_callback(int(local_data_id)(int data_id))
+   int forward_lambda_scoped_callback(int(local_data_id)(int data_id))
   {
-    if (compare_scoped_lambda_data != forward_lambda_scoped_callback)
+    if (!validate_service_user_data())
     {
-      this->user_data.source = this->null_service.source;
-      this->user_data.destination = this->null_service.destination;
+      this->user_data.predecessor = this->null_service.predecessor;
+      this->user_data.successor = this->null_service.successor;
       this->user_data.user_data = this->null_service.user_data;
       this->user_data.data_size = this->null_service.data_size;
     }
@@ -74,28 +69,37 @@ public:
     return (int)local_data_id;
   }
 
-  constexpr bool verify_scoped_lambda_integrity()
+  constexpr bool verify_scoped_lambda_integrity(int scoped_lambda)
   {
-    bool is_scoped_lambda_true = false;
-    switch (is_scoped_lambda_true)
+    switch (scoped_lambda)
     {
+    case 0:
+      scoped_lambda = compare_scoped_lambda_data(scoped_lambda, 0);
+    case 85:
+      scoped_lambda = compare_scoped_lambda_data(scoped_lambda, 85);
+    case 133:
+      scoped_lambda = compare_scoped_lambda_data(scoped_lambda, 133);
+    case 182:
+      scoped_lambda = compare_scoped_lambda_data(scoped_lambda, 182);
+    case 210:
+      scoped_lambda = compare_scoped_lambda_data(scoped_lambda, 210);
+    case 245:
+      scoped_lambda = compare_scoped_lambda_data(scoped_lambda, 245);
+    case 279:
+      scoped_lambda = compare_scoped_lambda_data(scoped_lambda, 279);
+    case 324:
+      scoped_lambda = compare_scoped_lambda_data(scoped_lambda, 324);
+    case 395:
+      scoped_lambda = compare_scoped_lambda_data(scoped_lambda, 395);
+    case 451:
+      scoped_lambda = compare_scoped_lambda_data(scoped_lambda, 451);
+
     default:
       std::printf("%v\n", forward_lambda_scoped_callback);
-      assert(forward_lambda_scoped_callback, 0);
-      assert(forward_lambda_scoped_callback, 85);
-      assert(forward_lambda_scoped_callback, 133);
-      assert(forward_lambda_scoped_callback, 182);
-      assert(forward_lambda_scoped_callback, 210);
-      assert(forward_lambda_scoped_callback, 245);
-      assert(forward_lambda_scoped_callback, 279);
-      assert(forward_lambda_scoped_callback, 324);
-      assert(forward_lambda_scoped_callback, 395);
-      assert(forward_lambda_scoped_callback, 451);
-
-      is_scoped_lambda_true = true;
+      scoped_lambda = true;
     }
 
-    return is_scoped_lambda_true;
+    return scoped_lambda;
   }
 };
 
