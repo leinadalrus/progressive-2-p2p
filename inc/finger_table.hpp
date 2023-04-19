@@ -1,55 +1,33 @@
 #ifndef FINGER_TABLE_HPP
 #define FINGER_TABLE_HPP
 
-#include <cmath>
 #include <iostream>
 
-#define _USE_MATH_DEFINES
-#define MINIMUM_SEGMENTED_NODES (10)
-#define MAXIMUM_COLUMNS (2)
-#define MAXIMUM_ROWS (10)
+const int MaxmimumLength = 10;
+const int MaximumColumns = 2;
+const int MaximumRows = 10;
 
-enum class ENodes {
-  One = 0,
-  Two = 85,
-  Three = 133,
-  Four = 182,
-  Five = 210,
-  Six = 245,
-  Seven = 279,
-  Eight = 324,
-  Nine = 395,
-  Zero = 451,
+class IntervalMatrix
+{
+public:
+  int key_values[MaximumColumns][MaximumRows];
 };
 
-class StartingNode {
+class Key
+{
 public:
-  int nodes[MAXIMUM_ROWS];
+  int keys[MaximumRows];
 };
 
-class IntervalMatrix {
+class FingerTable
+{
 public:
-  int key_values[MAXIMUM_COLUMNS][MAXIMUM_ROWS];
-};
-
-class Successor {
-public:
-  int successors[MAXIMUM_ROWS];
-};
-
-class Key {
-public:
-  int keys[MAXIMUM_ROWS];
-};
-
-class FingerTable {
-public:
-  StartingNode starting_node;
   IntervalMatrix interval_matrix;
-  Successor successor;
+  DataImplementation impl;
+  ChordDht chord;
   Key key;
 
-  int node(int starting_node);
+  int starting_node(int node);
   int interval(int k);
   int find_successor(int id);
   int find_predecessor(int id);
