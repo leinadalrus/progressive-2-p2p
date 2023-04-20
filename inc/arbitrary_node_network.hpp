@@ -10,8 +10,7 @@ class ArbitraryNodeNetwork
   ChordDht chord;
 
 public:
-  void
-  join(int node)
+  void join(int node)
   {
     this->finger.find_predecessor(this->chord.recorded_arc_formula(finger.impl.data.predecessor));
     finger.impl.data.predecessor = NULL;
