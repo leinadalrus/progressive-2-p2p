@@ -166,10 +166,17 @@ impl ArbitraryNodeNetwork for FingerTable {
 
 #[derive(Component)]
 pub struct ArbitraryNode {
+    finger_table: FingerTable,
+}
+
+#[derive(Component)]
+pub struct ChordRadial {
     rotation_speed: f32,
 }
+
 #[derive(Component)]
 pub struct SnapsTowardsChord;
+
 #[derive(Component)]
 pub struct RotatesAroundChord {
     pub rotation_speed: f32,
@@ -193,21 +200,22 @@ fn bundle_material_mesh(
 
 fn load_entity_handle(mut commands: Commands, asset_server: Res<AssetServer>) {
     let chord_shape_handle = asset_server.load("assets/images/circle.png");
-    let arbitrary_node_handle = asset_server.load("assets/images/circle.png");
+    let chord_node_entity_handle =
+        asset_server.load("assets/images/circle.png");
 
     commands.spawn((
         SpriteBundle {
             texture: chord_shape_handle,
             ..default()
         },
-        ArbitraryNode {
+        ChordRadial {
             rotation_speed: f32::to_radians(360.0),
         },
     ));
 
     commands.spawn((
         SpriteBundle {
-            texture: arbitrary_node_handle,
+            texture: chord_node_entity_handle,
             ..default()
         },
         RotatesAroundChord {
@@ -216,15 +224,16 @@ fn load_entity_handle(mut commands: Commands, asset_server: Res<AssetServer>) {
     ));
 }
 
-fn entity_rotation_system(mut query: Query<(&ArbitraryNode, &mut Transform)>) {
+fn entity_rotation_system(mut query: Query<(&ChordRadial, &mut Transform)>) {
     let delta_time = 1.0 / 60.0;
     let chord_boundary = Vec2::new(1.0, 1.0);
 
-    let (arbitrary_node, mut transform) = query.single_mut();
+    let (chord_node_entity, mut transform) = query.single_mut();
     let rotation_factor = 0.0;
 
-    transform
-        .rotate_z(rotation_factor * arbitrary_node.rotation_speed * delta_time);
+    transform.rotate_z(
+        rotation_factor * chord_node_entity.rotation_speed * delta_time,
+    );
 
     let varied_chord_boundary = Vec3::from((chord_boundary / 2.0, 0.0));
 
@@ -237,29 +246,32 @@ fn entity_rotation_system(mut query: Query<(&ArbitraryNode, &mut Transform)>) {
 fn transform_entity_query(
     mut query: Query<
         &mut Transform,
-        (With<SnapsTowardsChord>, Without<ArbitraryNode>),
+        (With<SnapsTowardsChord>, Without<ChordRadial>),
     >,
-    chord_query: Query<&Transform, With<ArbitraryNode>>,
+    chord_query: Query<&Transform, With<ChordRadial>>,
 ) {
     let node_properties = chord_query.single();
     let node_translation = node_properties.translation.xy();
 
-    for mut arbitrary_node in &mut query {
+    for mut chord_node_entity in &mut query {
         let within_towards_centre =
-            (node_translation - arbitrary_node.translation.xy()).normalize();
+            (node_translation - chord_node_entity.translation.xy()).normalize();
         let nodes_rotate_within_chord =
             Quat::from_rotation_arc(Vec3::Y, within_towards_centre.extend(0.0));
-        arbitrary_node.rotation = nodes_rotate_within_chord;
+        chord_node_entity.rotation = nodes_rotate_within_chord;
     }
 }
 
 fn execute_arbitrary_network_command(
     mut query: Query<
         (&RotatesAroundChord, &mut Transform),
-        Without<ArbitraryNode>,
+        Without<ChordRadial>,
     >,
-    arbitrary_node: Query<&Transform, With<ArbitraryNode>>,
+    chord_query: Query<&Transform, With<ChordRadial>>,
+    mut arbitrary_query: Query<&mut ArbitraryNode>,
 ) {
+    let delta_time = 1.0 / 60.0;
+
     let vector_matrix: [[u32; 2]; 10] = [
         [1, 0],
         [2, 85],
@@ -279,29 +291,67 @@ fn execute_arbitrary_network_command(
         hashkey: 85,
         size: 10,
     };
-    let finger = FingerTable {
-        interval_matrix: vector_matrix,
-        keys: array_keys,
-        dht,
-    };
+    // let finger = FingerTable {
+    //     interval_matrix: vector_matrix,
+    //     keys: array_keys,
+    //     dht,
+    // };
 
-    finger.starting_node();
-    let predecessor = finger.find_predecessor(1);
-    let successor = finger.find_successor(0);
-    finger.closest_preceding_finger(successor);
-    let interval = finger.interval();
+    let chord_transform = chord_query.single();
+    let chord_translation = chord_transform.translation.xyz();
 
-    loop {
-        <FingerTable as ArbitraryNodeNetwork>::join(finger);
+    for (rotator, mut transformer) in &mut query {
+        let node_fwd = (transformer.translation.xy()).normalize();
+        let translates_within_chord =
+            (chord_translation - transformer.rotation * Vec3::Y).xy();
+        let fwd_chord_dot = node_fwd.dot(translates_within_chord);
+
+        let node_offsetted = (transformer.rotation * Vec3::X).xy();
+        let offsetted_chord_dot = node_offsetted.dot(translates_within_chord);
+
+        let signed_rotation = -f32::copysign(1.0, offsetted_chord_dot);
+        let max_angle = fwd_chord_dot.clamp(-1.0, 1.0).acos();
+
+        let rotation_angle = signed_rotation
+            * (rotator.rotation_speed * delta_time).min(max_angle);
+        transformer.rotate_z(rotation_angle);
+    }
+
+    for mut arbitrary_node in &mut arbitrary_query {
+        arbitrary_node.finger_table.interval_matrix = vector_matrix;
+        arbitrary_node.finger_table.keys = array_keys;
+        arbitrary_node.finger_table.dht = dht;
+        
+        arbitrary_node.finger_table.starting_node();
+
+        let predecessor = arbitrary_node.finger_table.find_predecessor(85);
+        let successor = arbitrary_node.finger_table.find_successor(0);
+        arbitrary_node
+            .finger_table
+            .closest_preceding_finger(successor);
+        let interval = arbitrary_node.finger_table.interval();
+
+        <FingerTable as ArbitraryNodeNetwork>::join(
+            arbitrary_node.finger_table,
+        );
         <FingerTable as ArbitraryNodeNetwork>::update_finger_table(
-            finger,
+            arbitrary_node.finger_table,
             successor,
             predecessor,
         );
-        <FingerTable as ArbitraryNodeNetwork>::check_predecessor(finger);
-        <FingerTable as ArbitraryNodeNetwork>::notify(finger, interval);
-        <FingerTable as ArbitraryNodeNetwork>::stabilize(finger);
-        <FingerTable as ArbitraryNodeNetwork>::fix_fingers(finger);
+        <FingerTable as ArbitraryNodeNetwork>::check_predecessor(
+            arbitrary_node.finger_table,
+        );
+        <FingerTable as ArbitraryNodeNetwork>::notify(
+            arbitrary_node.finger_table,
+            interval,
+        );
+        <FingerTable as ArbitraryNodeNetwork>::stabilize(
+            arbitrary_node.finger_table,
+        );
+        <FingerTable as ArbitraryNodeNetwork>::fix_fingers(
+            arbitrary_node.finger_table,
+        );
     }
 }
 
